@@ -1,0 +1,149 @@
+<body>
+<div>
+  <h3>Oye Carmen, ¿quién es ese chico?</h3>
+  <div style="display:inline-block">
+  <comment audiosrc="/static/olle-carmen-quien-es-ese-chico.mp3" 
+    msginstruct="Pronunciation exercise" 
+    msgunsupported="This navigator cannot play this type of exercise." 
+    msgtoollink="(Click here for instructions)" 
+    msgtooltip="&lt;p&gt;1. Press the Play button on the left hand side and listen to the model recording&lt;/p&gt;&lt;p&gt;2. Press the Record button to record yourself&lt;/p&gt;&lt;p&gt;2b. Press the square button to stop recording&lt;/p&gt;&lt;p&gt;3. Press the Play button on the right hand side to listen to yourself&lt;/p&gt;" 
+    imgrec="/static/recording.png" 
+    imgstop="/static/stop.png"> 
+  </comment>
+  <script>// <![CDATA[
+  $.getScript( "/static/audioRecorder.js" )
+    .done(function( script, textStatus ) {
+        console.log("got");
+          leftchannel = [];
+          rightchannel = [];
+          recording = false;
+          recordingLength = 0;        
+          outputElement = document.getElementById('output');
+          outputString="";
+          getusermedia=true;
+          // feature detection
+          if (!navigator.getUserMedia)
+              navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia ||
+                            navigator.mozGetUserMedia || navigator.msGetUserMedia;
+  
+          if (navigator.getUserMedia){
+              navigator.getUserMedia({audio:true}, success, function(e) {
+              alert('Error capturing audio.');
+              });
+          } else getusermedia=false;
+    });
+  // variables
+    
+  function configelements(elements)
+      {
+          objrec= null;
+          if (elements.length>0)
+          {
+             elements.toArray().forEach(function(element){
+               console.log(element);
+                 $(".instruct",element.parentElement)[0].innerHTML=element.getAttribute("msginstruct");
+                 $(".toollink",element.parentElement)[0].innerHTML=element.getAttribute("msgtoollink");
+                 $(".tip",element.parentElement)[0].innerHTML=element.getAttribute("msgtooltip");
+                 $(".sample",element.parentElement)[0].src=element.getAttribute("audioSrc");
+                 $("img",element.parentElement)[0].src=element.getAttribute("imgRec");
+                 $(".unsupported",element.parentElement)[0].innerHTML=element.getAttribute("msgunsupported");
+             })
+          }
+      }
+    
+    
+  function supported(supported)
+    {
+     
+      if (!supported)
+      { 
+      $($(".instruct",this.parentElement)).hide();
+        $($(".toollink",this.parentElement)).hide();
+        $($(".tip",this.parentElement)).hide();
+        $($(".sample",this.parentElement)).hide();
+        $($(".record",this.parentElement)).hide();
+        $($(".audiorecorder",this.parentElement)).hide();
+        $($(".1",this.parentElement)).hide();
+        $($(".2",this.parentElement)).hide();
+        $($(".3",this.parentElement)).hide();      
+        $($(".unsupported",this.parentElement)).show();
+      }
+    }
+    
+    $( document ).ajaxComplete(function() {
+    $('.toollink').unbind('click');       
+         $(".toollink").click(function () {  
+           console.log(this.parentElement.parentElement.parentElement);
+           if ($(".tip",this.parentElement.parentElement.parentElement)[0].style.display=="none")
+             {
+              
+               eleOffset = $(this).offset();
+               $($(".tip",this.parentElement.parentElement)[0]).fadeIn("fast").css({
+                left: eleOffset.left + $(this).outerWidth() -360,
+                top: eleOffset.top -110
+               });
+             }
+                else
+             {
+              $($(".tip",this.parentElement.parentElement)[0]).hide();
+             }
+         });
+       configelements($('comment'));
+       supported(getusermedia);
+  });
+    
+    
+     $(document).ready(function () {          
+         $('.toollink').unbind('click');       
+         $(".toollink").click(function () {  
+           console.log(this.parentElement.parentElement.parentElement);
+           if ($(".tip",this.parentElement.parentElement.parentElement)[0].style.display=="none")
+             {
+              
+               eleOffset = $(this).offset();
+               $($(".tip",this.parentElement.parentElement)[0]).fadeIn("fast").css({
+                left: eleOffset.left + $(this).outerWidth() -360,
+                top: eleOffset.top -110
+               });
+             }
+                else
+             {
+              $($(".tip",this.parentElement.parentElement)[0]).hide();
+             }
+         });
+       configelements($('comment'));
+       supported(getusermedia);
+     });
+  
+    
+  
+  function updateaudioIos(obj){
+  console.log("updated");
+  }
+  
+  // ]]></script>
+  <style>
+      .tooltip{
+     position: absolute;
+     background: #c0df71;
+     color: #fff;
+     border-radius:10px;
+    font-family: "Lucida Grande", Lucida, Verdana, sans-serif;
+    padding: 10px;
+    margin-top: -10px;
+    margin-left: 10px;
+     z-index: 4;
+     display: none;
+    background-color: #ff934f;
+  }
+  </style>
+  <p><div style="background-color: #0d0d0d;"><p><span class="instruct" style="color: whitesmoke;"></span>&nbsp;<span  class="unsupported" style="text-decoration: underline; color: whitesmoke; display:none"></span><span  class="toollink" style="text-decoration: underline; color: whitesmoke;"></span></p>
+  <div class="tip" style="display: none; left: 229px; top: 18px; background-color: #e0d22b; position: absolute; background: #c0df71; color: #fff; border-radius: 10px; padding: 10px; margin-top: -10px; margin-left: 10px; z-index: 4;"></div>
+  <span class="1" style="color: white; position: relative; left: 30px; z-index: 3; font-size: x-small;">1</span>
+  <audio class="sample" controls="controls" style="width:200px"></audio>
+  <span class="2" style="color: white; position: relative; left: 30px; z-index: 3; font-size: x-small;">2</span>
+  <input type="file" accept="video/*;capture=camcorder" class="iosfile" hidden  name="files[]" multiple onchange="handleFileSelect(this);"/>
+  <img class="audiorecorder" src="/static/recording.png" onclick="toggleRecord(this)" width="30px" height="30px" style="position: relative; top: -10px;" />
+  <span class="3" style="color: white; position: relative; left: 30px; z-index: 3; font-size: x-small;">3</span>
+  <audio class="record" controls="controls" autoplay="autoplay" style="width:200px"></audio></div>
+  </div>
